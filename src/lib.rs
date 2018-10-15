@@ -1,5 +1,5 @@
 mod hello;
-pub use hello::it_works;
+pub use hello::get_module;
 
 
 
