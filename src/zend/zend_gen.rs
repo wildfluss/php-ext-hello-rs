@@ -1,0 +1,28 @@
+use std::os::raw::{c_ushort, c_uint, c_uchar, c_int, c_void, c_char};
+#[repr(C)]
+pub struct _zend_module_entry {
+    pub size: c_ushort,
+    pub zend_api: c_uint,
+    pub zend_debug: c_uchar,
+    pub zts: c_uchar,
+    pub ini_entry: *mut c_void,
+    pub deps: *mut c_void,
+    pub name: *const c_char,
+    pub functions: *mut c_void,
+    pub module_startup_func: *mut c_void,
+    pub module_shutdown_func: *mut c_void,
+    pub request_startup_func: *mut c_void,
+    pub request_shutdown_func: *mut c_void,
+    pub info_func: *mut c_void,
+    pub version: *const c_char,
+    pub globals_size: c_int,
+    pub globals_ptr: *mut c_void,
+    pub globals_ctor: *mut c_void,
+    pub globals_dtor: *mut c_void,
+    pub post_deactivate_func: *mut c_void,
+    pub module_started: c_int,
+    pub type_: c_uchar,
+    pub handle: *mut c_void,
+    pub module_number: c_int,
+    pub build_id: *const c_char,
+}
