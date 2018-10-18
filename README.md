@@ -1,15 +1,28 @@
 # hello (Rust)
 
-Build 
+To build extension only set (see: https://doc.rust-lang.org/reference/linkage.html)
+
+```
+crate-type = ["cdylib"]
+```
+
+in Cargo.toml and
 
 ```
 cd php-ext-hello-rs
+RUSTFLAGS='-C prefer-dynamic' cargo build --lib
+```
+
+or set in Cargo.toml (otherwise: can't find crate hello)
+
+```
+crate-type = ["dylib"]
+```
+
+and also try **build and** run hello (which uses lib crate)
+
+```
 RUSTFLAGS='-C prefer-dynamic' cargo build
-```
-
-and try run 
-
-```
 DYLD_LIBRARY_PATH=$HOME/.rustup/toolchains/a-toolchain/lib/ ./target/debug/hello
 ```
 
