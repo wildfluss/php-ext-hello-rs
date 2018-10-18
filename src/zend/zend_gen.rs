@@ -1,4 +1,4 @@
-use std::os::raw::{c_ushort, c_uint, c_uchar, c_int, c_void, c_char};
+use std::os::raw::{c_char, c_int, c_uchar, c_uint, c_ushort, c_void};
 #[repr(C)]
 pub struct _zend_module_entry {
     pub size: c_ushort,
