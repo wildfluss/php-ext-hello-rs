@@ -8,4 +8,4 @@ libc = "0.2.43"
 
 [lib]
 name = "hello"
-crate-type = ["dylib"]
+crate-type = ["cdylib"]
