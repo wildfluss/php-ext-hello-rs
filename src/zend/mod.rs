@@ -12,7 +12,7 @@ pub const USING_ZTS: c_uchar = 0; // NTS
 use std::mem;
 use std::ptr;
 
-const ZEND_MODULE_BUILD_ID: &str = "API320170718,NTS"; // php -ini | grep 'Zend Extension Build'
+const ZEND_MODULE_BUILD_ID: &str = "API20170718,NTS"; // php -ini | grep 'PHP Extension Build'
 
 impl _zend_module_entry {
     fn init(&mut self, name: &str, version: &str) {
