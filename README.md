@@ -1,5 +1,7 @@
 # hello (Rust)
 
+PHP ext_skel for Rust.
+
 To build extension only set (see: https://doc.rust-lang.org/reference/linkage.html)
 
 ```
@@ -11,6 +13,13 @@ in Cargo.toml and
 ```
 cd php-ext-hello-rs
 RUSTFLAGS='-C prefer-dynamic' cargo build --lib
+```
+
+test PHP extension:
+
+```
+$ php -d extension=./target/debug/libhello.dylib -m | grep hell
+hello
 ```
 
 or set in Cargo.toml (otherwise: can't find crate hello)
