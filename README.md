@@ -18,8 +18,11 @@ RUSTFLAGS='-C prefer-dynamic' cargo build --lib
 test PHP extension:
 
 ```
-$ php -d extension=./target/debug/libhello.dylib -m | grep hell
-hello
+$ php -d extension=./target/debug/libhello.so -f hello.php
+Functions available in the test extension:
+confirm_hello_compiled
+
+
 ```
 
 or set in Cargo.toml (otherwise: can't find crate hello)
@@ -46,5 +49,5 @@ How to generate zend.rs
 Get yakovzaytsev/rust-gen-struct@ecb03b8 and
 
 ```
-DYLD_LIBRARY_PATH=$HOME/.local/share/llvmenv/7.0.0/lib /path/to/rust-gen-struct /home/src/php-7.2.10/Zend/zend_modules.h _zend_module_entry > src/zend/zend_gen.rs
+[DY]LD_LIBRARY_PATH=$HOME/.local/share/llvmenv/7.0.0/lib /path/to/rust-gen-struct /home/src/php-7.2.10/Zend/zend_modules.h _zend_module_entry > src/zend/zend_gen.rs
 ```

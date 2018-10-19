@@ -4,7 +4,7 @@ pub use self::zend_gen::_zend_module_entry;
 
 use std::ffi::CString;
 use std::ffi::CStr;
-use std::os::raw::{c_uchar, c_char, c_uint, c_void};
+use std::os::raw::{c_uchar, c_char, c_int, c_uint, c_void};
 
 pub const ZEND_MODULE_API_NO: c_uint = 20170718; // zend_modules.h
 pub const ZEND_DEBUG: c_uchar = 0; // php -ini | grep 'Debug =>'
@@ -64,4 +64,24 @@ impl _zend_module_entry {
             entry
         }
     }
+}
+
+// #[repr(C)]
+// pub struct _zend_internal_arg_info {
+//     pub name: *const c_char,
+//     // zend_type uintptr_t
+//     pub type_: *mut c_void,
+//     // zend_uchar unsigned char
+//     pub pass_by_reference: c_uchar,
+//     // zend_bool unsigned char
+//     pub is_variadic: c_uchar,
+// }
+
+#[repr(C)]
+pub struct _zend_function_entry {
+    pub fname: *const c_char,
+    pub handler: *mut c_void, // void (*zif_handler)(INTERNAL_FUNCTION_PARAMETERS);
+    pub arg_info: *mut c_void, // XXX const struct _zend_internal_arg_info *
+    pub num_args: c_uint, // uint32_t
+    pub flags: c_uint, // uint32_t
 }

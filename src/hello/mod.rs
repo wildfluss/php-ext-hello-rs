@@ -4,9 +4,17 @@ extern crate libc;
 use zend::*;
 use std::mem;
 use std::ptr;
-use std::os::raw::{c_char};
+use std::os::raw::{c_char, c_void};
+use std::ffi::CString;
 
 const PHP_HELLO_VERSION: &str = "0.1.0";
+
+// ZEND_NAMED_FUNCTION(ZEND_FN(name)) zif_##name
+// INTERNAL_FUNCTION_PARAMETERS
+// zend_execute_data *execute_data, zval *return_value
+fn zif_confirm_hello_compiled(execute_data: *mut c_void, return_value: *mut c_void) { // void
+    
+}
 
 static mut hello_module_entry: _zend_module_entry = 
         _zend_module_entry {
@@ -42,11 +50,25 @@ static mut hello_module_entry: _zend_module_entry =
 
 #[no_mangle]
 pub extern "C" fn get_module() -> *const _zend_module_entry {
+    let mut hello_functions: Vec<_zend_function_entry> = vec![
+        // PHP_FE
+        _zend_function_entry {
+            fname: CString::new("confirm_hello_compiled").unwrap().into_raw(),
+            handler: zif_confirm_hello_compiled as *mut c_void,
+            arg_info: ptr::null_mut(),
+            num_args: 0,
+            flags: 0,
+        }
+    ];
+    // println!("hello_functions[0] {:?}", hello_functions[0]);
     unsafe {
         hello_module_entry.init(
             "hello",
             PHP_HELLO_VERSION
         );
+        // TODO transfers ownership to C
+        hello_module_entry.functions = hello_functions.as_mut_ptr() as *mut c_void;
+        mem::forget(hello_functions);
         &hello_module_entry
     }
 }
