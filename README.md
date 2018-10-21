@@ -10,10 +10,18 @@ crate-type = ["cdylib"]
 
 in Cargo.toml and
 
-```
-cd php-ext-hello-rs
-RUSTFLAGS='-C prefer-dynamic' cargo build --lib
-```
+- on linux 
+
+    ```
+    cd php-ext-hello-rs
+    RUSTFLAGS='-C prefer-dynamic' cargo build --lib
+    ```
+
+- or on OSX 
+
+    ```
+    RUSTFLAGS="-Cprefer-dynamic -Clink-arg=-undefined -Clink-arg=dynamic_lookup" cargo build --lib
+    ```
 
 test PHP extension:
 

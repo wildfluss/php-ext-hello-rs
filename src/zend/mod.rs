@@ -171,4 +171,16 @@ macro_rules! RETURN_STR {
     };
 }
 
-
+#[macro_export]
+macro_rules! PHP_FE_END {
+    // () that macro takes no args
+    () => {
+        _zend_function_entry {
+            fname: ptr::null_mut(),
+            handler: ptr::null_mut(),
+            arg_info: ptr::null_mut(),
+            num_args: 0,
+            flags: 0,
+        }
+    }
+}

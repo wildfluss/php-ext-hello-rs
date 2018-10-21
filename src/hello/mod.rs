@@ -59,7 +59,8 @@ pub extern "C" fn get_module() -> *const _zend_module_entry {
             arg_info: ptr::null_mut(),
             num_args: 0,
             flags: 0,
-        }
+        },
+        PHP_FE_END!(),
     ];
     // println!("hello_functions[0] {:?}", hello_functions[0]);
     unsafe {
