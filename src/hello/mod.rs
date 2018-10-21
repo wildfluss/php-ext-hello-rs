@@ -12,8 +12,9 @@ const PHP_HELLO_VERSION: &str = "0.1.0";
 // ZEND_NAMED_FUNCTION(ZEND_FN(name)) zif_##name
 // INTERNAL_FUNCTION_PARAMETERS
 // zend_execute_data *execute_data, zval *return_value
-fn zif_confirm_hello_compiled(execute_data: *mut c_void, return_value: *mut c_void) { // void
-    
+fn zif_confirm_hello_compiled(execute_data: *mut c_void, return_value: *mut _zval_struct) { // void
+    let strg = strpprintf(0, "Congratulations! You have successfully modified ext/hello/config.m4. Module hello is now compiled into PHP.");
+    RETURN_STR!(return_value, strg)
 }
 
 static mut hello_module_entry: _zend_module_entry = 

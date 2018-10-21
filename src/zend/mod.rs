@@ -1,10 +1,12 @@
+extern crate libc;
+
 mod zend_gen;
 
 pub use self::zend_gen::_zend_module_entry;
 
 use std::ffi::CString;
 use std::ffi::CStr;
-use std::os::raw::{c_uchar, c_char, c_int, c_uint, c_void};
+use std::os::raw::{c_uchar, c_char, c_int, c_uint, c_void, c_long, c_double};
 
 pub const ZEND_MODULE_API_NO: c_uint = 20170718; // zend_modules.h
 pub const ZEND_DEBUG: c_uchar = 0; // php -ini | grep 'Debug =>'
@@ -85,3 +87,88 @@ pub struct _zend_function_entry {
     pub num_args: c_uint, // uint32_t
     pub flags: c_uint, // uint32_t
 }
+
+#[repr(C)]
+#[derive(Clone, Copy)] // otherwise unions with non-`Copy` fields are unstable
+pub struct v {
+    // ZEND_ENDIAN_LOHI_3
+    pub type_: c_uchar,
+    pub flags: c_uchar,
+    pub gc_info: libc::uint16_t,
+}
+
+#[repr(C)]
+pub union u {
+    pub v: v,
+    pub type_info: libc::uint32_t,
+}
+
+#[repr(C)]
+pub struct zend_refcounted_h {
+    pub refcount: libc::uint32_t,
+    pub u: u,
+}
+
+#[repr(C)]
+pub struct _zend_string {
+    pub gc: zend_refcounted_h,
+    pub h: libc::int64_t,
+    pub len: libc::size_t,
+    pub val: c_char,
+}
+
+#[repr(C)]
+pub union _zend_value {
+    pub lval: c_long, // long value zend_long int64_t
+    pub dval: c_double,
+    pub str: *mut _zend_string,
+    // TODO: 
+}
+
+#[repr(C)]
+pub union u1 {
+    // TODO: 
+    pub type_info: libc::uint32_t,
+}
+
+#[repr(C)]
+pub union u2 {
+    pub next: libc::uint32_t,
+    // TODO: 
+}
+
+#[repr(C)]
+pub struct _zval_struct { // zval
+    pub value: _zend_value,
+    pub u1: u1,
+    pub u2: u2,
+}
+
+pub const IS_STRING_EX: libc::uint32_t = 5126;
+
+extern "C" {
+    fn zend_strpprintf(max_len: libc::size_t, format: *const c_char, ...) -> *mut _zend_string;
+}
+
+// XXX
+pub fn strpprintf(max_len: libc::size_t, format: &str) -> *mut _zend_string {
+    let c_format = CString::new(format).unwrap();
+    unsafe {
+        let strg = zend_strpprintf(max_len, c_format.as_ptr());
+        strg // ???
+    }
+}
+
+#[macro_export]
+macro_rules! RETURN_STR {
+    ( $return_value:expr, $strg:expr ) => {
+        {
+            unsafe {
+                (*$return_value).value.str = $strg; // RETURN_STR
+                (*$return_value).u1.type_info = IS_STRING_EX;
+            }
+        }
+    };
+}
+
+
