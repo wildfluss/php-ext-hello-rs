@@ -161,11 +161,11 @@ pub fn strpprintf(max_len: libc::size_t, format: &str) -> *mut _zend_string {
 
 #[macro_export]
 macro_rules! RETURN_STR {
-    ( $strg:expr ) => {
+    ( $return_value:expr, $strg:expr ) => {
         {
             unsafe {
-                (*return_value).value.str = $strg; // RETURN_STR
-                (*return_value).u1.type_info = IS_STRING_EX;
+                (*$return_value).value.str = $strg; // RETURN_STR
+                (*$return_value).u1.type_info = IS_STRING_EX;
             }
         }
     };
