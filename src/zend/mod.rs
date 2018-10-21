@@ -146,3 +146,29 @@ pub struct _zval_struct { // zval
 
 pub const IS_STRING_EX: libc::uint32_t = 5126;
 
+extern "C" {
+    fn zend_strpprintf(max_len: libc::size_t, format: *const c_char, ...) -> *mut _zend_string;
+}
+
+// XXX
+pub fn strpprintf(max_len: libc::size_t, format: &str) -> *mut _zend_string {
+    let c_format = CString::new(format).unwrap();
+    unsafe {
+        let strg = zend_strpprintf(max_len, c_format.as_ptr());
+        strg // ???
+    }
+}
+
+#[macro_export]
+macro_rules! RETURN_STR {
+    ( $strg:expr ) => {
+        {
+            unsafe {
+                (*return_value).value.str = $strg; // RETURN_STR
+                (*return_value).u1.type_info = IS_STRING_EX;
+            }
+        }
+    };
+}
+
+

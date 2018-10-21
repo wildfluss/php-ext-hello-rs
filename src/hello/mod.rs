@@ -9,28 +9,12 @@ use std::ffi::CString;
 
 const PHP_HELLO_VERSION: &str = "0.1.0";
 
-extern "C" {
-    fn zend_strpprintf(max_len: libc::size_t, format: *const c_char, ...) -> *mut _zend_string;
-}
-
-// XXX
-fn strpprintf(max_len: libc::size_t, format: &str) -> *mut _zend_string {
-    let c_format = CString::new(format).unwrap();
-    unsafe {
-        let strg = zend_strpprintf(max_len, c_format.as_ptr());
-        strg // ???
-    }
-}
-
 // ZEND_NAMED_FUNCTION(ZEND_FN(name)) zif_##name
 // INTERNAL_FUNCTION_PARAMETERS
 // zend_execute_data *execute_data, zval *return_value
 fn zif_confirm_hello_compiled(execute_data: *mut c_void, return_value: *mut _zval_struct) { // void
     let strg = strpprintf(0, "Congratulations! You have successfully modified ext/hello/config.m4. Module hello is now compiled into PHP.");
-    unsafe {
-        (*return_value).value.str = strg; // RETURN_STR
-        (*return_value).u1.type_info = IS_STRING_EX;
-    }
+    RETURN_STR!(strg)
 }
 
 static mut hello_module_entry: _zend_module_entry = 
