@@ -1,4 +1,3 @@
-#[macro_use]
-pub mod zend;
+#[macro_use] pub mod zend;
 mod hello;
 pub use hello::get_module;
